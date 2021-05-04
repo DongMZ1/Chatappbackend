@@ -1,11 +1,16 @@
 const express = require('express');
-const socket = require('socket.io');
+const socketio = require('socket.io');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
 const cors = require('cors');
 const mongoose = require('mongoose');
+const io = require('socket.io')(server, { cors: {origin: '*'}})
+const userrouter = require('./router/user_router');
 
 app.use(cors());
 app.use(express.json())
+app.use('/api/user', userrouter);
 app.use((req, res, next)=>{
     const error = new Error('url not find');
     error.status = 404;
@@ -21,9 +26,19 @@ mongoose
     `mongodb+srv://Pikachu:518dmz518@cluster0.i4fyv.mongodb.net/CHATAPP?retryWrites=true&w=majorityy`
   )
   .then(() => {
-    const server = app.listen(process.env.PORT || 5000);
-    io = socket(server);
-  })
+    server.listen(process.env.PORT || 5000);
+    console.log('Express server launching..')
+  }).then(
+    ()=>{
+      io.on('connection', socket => {
+        console.log('hello');
+        socket.emit('message', 'Connect to server');
+        socket.on('message', message => {
+          console.log(message);
+        })
+      })
+    }
+  )
   .catch(err => {
     console.log(err);
   });
