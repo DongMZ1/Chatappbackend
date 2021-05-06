@@ -3,15 +3,14 @@ const mongoose = require('mongoose');
 const User = mongoose.Schema(
     {
         username: {type: String, required: true},
-        email:{type: String, required: true},
-        friends: [{type: String}],
+        friends: [{type: String}], //other friends's username of this user
         password: {type: String, required: true},
         messages: [{
-            user: {type: String},
+            users: {type: String}, // how many people in this conversation
             contents: [
                 {
-                     fromwho: {type: String},
-                     content: {type: String} 
+                     fromwho: {type: String},  //who speak the sentence
+                     content: {type: String}   // the content of this sentence
                 }
             ]
         }]

@@ -23,7 +23,7 @@ app.use((error, req, res, next) =>{
 
 mongoose
   .connect(
-    `mongodb+srv://Pikachu:518dmz518@cluster0.i4fyv.mongodb.net/CHATAPP?retryWrites=true&w=majorityy`
+    `mongodb+srv://Pikachu:518dmz518@cluster0.i4fyv.mongodb.net/CHATAPP?retryWrites=true&w=majority`
   )
   .then(() => {
     server.listen(process.env.PORT || 5000);
@@ -31,7 +31,6 @@ mongoose
   }).then(
     ()=>{
       io.on('connection', socket => {
-        console.log('hello');
         socket.emit('message', 'Connect to server');
         socket.on('message', message => {
           console.log(message);
