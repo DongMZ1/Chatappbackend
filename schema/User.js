@@ -4,7 +4,6 @@ const User = mongoose.Schema(
     {
         username: {type: String, required: true},
         friends: [{type: String}], //other friends's username of this user
-        password: {type: String, required: true},
         messages: [{
             room: {type: String},
             friend: {type: String}, // to whom

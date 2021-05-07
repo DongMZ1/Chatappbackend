@@ -8,8 +8,16 @@ const mongoose = require('mongoose');
 const io = require('socket.io')(server, { cors: {origin: '*'}})
 const userrouter = require('./router/user_router');
 
-app.use(cors());
-app.use(express.json())
+
+app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token");
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  
+    next();
+  });
 app.use('/api/user', userrouter);
 app.use((req, res, next)=>{
     const error = new Error('url not find');
@@ -30,12 +38,14 @@ mongoose
     console.log('Express server launching..')
   }).then(
     ()=>{
+      /*
       io.on('connection', socket => {
         socket.emit('message', 'Connect to server');
         socket.on('message', message => {
           console.log(message);
         })
       })
+      */
     }
   )
   .catch(err => {
