@@ -64,4 +64,11 @@ router.post('/signup', async (req, res, next) =>{
     return res.status(201).json({newuser: 'hello!'});
 })
 
+router.get('/getroom', async (req, res, next) =>{
+    const {username} = req.body;
+    const {friendname} = req.body;
+    let room;
+    return res.status(201).json({room: 'hello!'});
+})
+
 module.exports = router;

@@ -6,10 +6,11 @@ const User = mongoose.Schema(
         friends: [{type: String}], //other friends's username of this user
         password: {type: String, required: true},
         messages: [{
-            users: {type: String}, // how many people in this conversation
+            room: {type: String},
+            friend: {type: String}, // to whom
             contents: [
                 {
-                     fromwho: {type: String},  //who speak the sentence
+                     isuser: {type: Boolean},  //who speak the sentence
                      content: {type: String}   // the content of this sentence
                 }
             ]
