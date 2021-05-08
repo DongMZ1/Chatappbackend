@@ -26,6 +26,57 @@ router.post('/login', async (req, res, next) =>{
 
 });
 
+router.post('/conversationhistory', async (req, res, next) =>{
+      const {username, friendname} = req.body;
+      let history;
+      const user = await User.findOne({username: username});
+      //check if the if the conversation is with friend, if yes, then return their content
+      user.messages.forEach(
+          conversation => {
+              if(conversation.friend === friendname){
+                  history = conversation.contents;
+              }
+          }
+      )
+      res.status(201).json({history});
+});
+
+router.post('/addcontenttoconversation', async (req, res, next)=>{
+    const {username, friendname, content} = req.body;
+    const user = await User.findOne({username});
+    const friend = await User.findOne({username: friendname});
+
+    user.messages.forEach(
+        conversation => {
+            if(conversation.friend === friendname){
+                conversation.contents.push(
+                    {
+                        whospeak: username,
+                        content
+                    }
+                )
+            }
+        }
+    )
+
+
+    friend.messages.forEach(
+        conversation => {
+            if(conversation.friend === username){
+                conversation.contents.push(
+                    {
+                        whospeak: username,
+                        content
+                    }
+                )
+            }
+        }
+    )
+    await user.save();
+    await friend.save();
+    res.status(201).json({user});
+})
+
 router.post('/requestfriend', async (req, res, next) =>{
      const {username, friendname} = req.body;
      const friend = await User.findOne({username: friendname});
