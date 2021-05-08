@@ -21,7 +21,7 @@ router.post('/login', async (req, res, next) =>{
         return res.status(201).json({user: JSON.stringify(newuser)});
        }
 
-       return res.status(201).json({user: JSON.stringify(existinguser)});
+       return res.status(201).json({user: existinguser});
        
 
 });
@@ -57,15 +57,20 @@ router.post('/addfriend', async (req, res, next) =>{
        const user = await User.findOne({username: username});
        const friend = await User.findOne({username: friendname});
       /*check the if the friend is already your friend */
+      let alreadyfriend = false;
        user.messages.forEach(
            conversation => {
                if(conversation.friend === friendname){
-                   const err = new Error('The person you request is already your friend');
-                   err.status = 401;
-                   return next(err);
+                   alreadyfriend = true;
                }
            }
        );
+
+       if(alreadyfriend){
+           const err = new Error('The person you request is already your friend');
+          err.status = 401;
+          return next(err);
+       }
        /*remove the username on friend request array */
        user.friendrequest.remove(friendname);
        await user.save(); 
