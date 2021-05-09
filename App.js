@@ -7,6 +7,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const io = require('socket.io')(server, { cors: {origin: '*'}})
 const userrouter = require('./router/user_router');
+const User = require('./schema/User');
 
 
 app.use(express.json());
@@ -37,11 +38,50 @@ mongoose
     console.log('Express server launching..')
   }).then(
       
-      io.on('connection', socket => {
-        socket.emit('message', 'Connect to server');
-        socket.on('message', message => {
-          console.log(message);
+      io.on('connection', async (socket) => {
+
+        socket.on('join_room', room => {
+          socket.join(room);
         })
+
+        socket.on('message', async ({room, username, friendname, content}) =>{
+
+          const user = await User.findOne({username});
+          const friend = await User.findOne({username: friendname});
+      
+          user.messages.forEach(
+              conversation => {
+                  if(conversation.friend === friendname){
+                      conversation.contents.push(
+                          {
+                              whospeak: username,
+                              content
+                          }
+                      )
+                  }
+              }
+          )
+      
+      
+          friend.messages.forEach(
+              conversation => {
+                  if(conversation.friend === username){
+                      conversation.contents.push(
+                          {
+                              whospeak: username,
+                              content
+                          }
+                      )
+                  }
+              }
+          )
+          await user.save();
+          await friend.save();
+
+          socket.to(room).emit('receive_message', {username, content});
+        })
+
+        
       })
       
   )
