@@ -38,14 +38,20 @@ mongoose
     console.log('Express server launching..')
   }).then(
       
-      io.on('connection', async (socket) => {
+      io.on('connection', (socket) => {
 
         socket.on('join_room', room => {
           socket.join(room);
+          console.log(`join room ${room}`);
+        })
+
+        socket.on('leave_room', room =>{
+          socket.leave(room);
+          console.log(`socket leaved ${room}`);
         })
 
         socket.on('message', async ({room, username, friendname, content}) =>{
-
+        //save content to mongodb
           const user = await User.findOne({username});
           const friend = await User.findOne({username: friendname});
       
@@ -77,8 +83,11 @@ mongoose
           )
           await user.save();
           await friend.save();
-
+       //end of save content to mongodb
           socket.to(room).emit('receive_message', {username, content});
+          console.log(`username: ${username} content: ${content}`);
+
+
         })
 
         
