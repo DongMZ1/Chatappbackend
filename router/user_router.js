@@ -75,6 +75,14 @@ router.post('/addcontenttoconversation', async (req, res, next)=>{
     await user.save();
     await friend.save();
     res.status(201).json({user});
+});
+
+router.post('/possiblefriends', async(req, res, next) =>{
+    const {username} = req.body;
+    const allusers = await User.find();
+    const allusernames = allusers.map(user => user.username).filter( name => name !== username);
+    res.status(201).json({allusernames});
+    
 })
 
 router.post('/requestfriend', async (req, res, next) =>{
