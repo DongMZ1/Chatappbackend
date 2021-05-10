@@ -132,7 +132,7 @@ router.post('/addfriend', async (req, res, next) =>{
        }
        /*remove the username on friend request array */
        user.friendrequest.remove(friendname);
-       await user.save(); 
+       friend.friendrequest.remove(username);
        /*accept the user, and create a one-one message User.messages */
        user.messages.push({
             room: roomnumber,
