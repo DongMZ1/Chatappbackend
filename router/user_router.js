@@ -18,7 +18,7 @@ router.post('/login', async (req, res, next) =>{
             }
         );
         await newuser.save();
-        return res.status(201).json({user: JSON.stringify(newuser)});
+        return res.status(201).json({user: newuser});
        }
 
        return res.status(201).json({user: existinguser});
