@@ -41,4 +41,27 @@ describe('App', () => {
     )
 });
 
+it('post request for possible friend list', (done)=>{
+    chai.request(app).post('/api/user/possiblefriends').send({username:'tester1'}).end(
+        (err, res)=>{
+            const status= res.status;
+            assert.property(res.body, 'allusernames');
+            assert(201, status, 'the status is not correct');
+            done();
+        }
+    )
+});
+
+it('friend request', (done)=>{
+    chai.request(app).post('/api/user/requestfriend').send({username:'tester1', friendname:'tester2'}).end(
+        (err, res)=>{
+            const status= res.status;
+            assert(401, status, 'the status is not correct');
+            done();
+        }
+    )
+});
+
+   
+
 })
