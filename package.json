@@ -4,7 +4,7 @@
   "description": "chat app express backend",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node App.js",
     "nodemon": "nodemon App.js"
   },
